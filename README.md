@@ -41,7 +41,6 @@ Visualization of model performance:
 - ```./data/night_fires.txt```: list of fires that occur during the night (so they can be removed)
 - ```./data/omit_mislabeled.txt```: list of images that are supposed to be labeled but do not have bbox labels
 
-
 **Generating train/val/test split:**
 1. From labeled_fires, remove night_fires and mislabeled_fires. Use as the train set.
 2. From unlabeled_fires, split 50/50 between validation and test sets. 
