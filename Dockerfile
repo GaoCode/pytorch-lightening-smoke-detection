@@ -8,11 +8,14 @@ WORKDIR /userdata/kerasData
 # Prevents asking for user input when installing packages
 ARG DEBIAN_FRONTEND=noninteractive
 
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN rm /etc/apt/sources.list.d/nvidia-ml.list
+
 # Install system packages. Put on separate lines to use caching.
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y git
 RUN apt-get install -y sudo
-RUN apt-get install -y tmux 
+RUN apt-get install -y tmux
 RUN apt-get install -y wget
 RUN apt-get install -y curl
 
@@ -34,7 +37,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # Install pip packages. Put on separate lines to use caching.
 RUN pip3.9 install --upgrade pip
-RUN pip3.9 install jupyterlab 
+RUN pip3.9 install jupyterlab
 RUN pip3.9 install numpy
 RUN pip3.9 install matplotlib
 RUN pip3.9 install torch
@@ -45,11 +48,18 @@ RUN pip3.9 install sklearn
 RUN pip3.9 install opencv-python
 RUN pip3.9 install transformers
 RUN pip3.9 install efficientnet-pytorch
-RUN pip3.9 install torch_gtrxl
+# RUN pip3.9 install torch_gtrxl
+RUN pip3.9 install gtrxl-torch
 
 # Fix ipynb bug with progress bar
 RUN pip3.9 install ipywidgets
-RUN jupyter nbextension enable --py widgetsnbextension
+
+# RUN jupyter nbextension enable --py widgetsnbextension
+# RUN jupyter nbextension enable --py widgetsnbextension
+RUN pip3.9 install jupyter
+RUN pip3.9 install jupyter_contrib_nbextensions
+# RUN jupyter contrib nbextension install --user
+# RUN jupyter nbextension enable --py widgetsnbextension
 
 ENV PYTHONPATH='/src/:$PYTHONPATH'
 
