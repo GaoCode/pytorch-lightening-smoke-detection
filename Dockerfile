@@ -57,6 +57,7 @@ RUN pip3.9 install ipywidgets
 # RUN jupyter nbextension enable --py widgetsnbextension
 # RUN jupyter nbextension enable --py widgetsnbextension
 RUN pip3.9 install jupyter
+RUN pip3.9 install notebook
 RUN pip3.9 install jupyter_contrib_nbextensions
 # RUN jupyter contrib nbextension install --user
 # RUN jupyter nbextension enable --py widgetsnbextension
