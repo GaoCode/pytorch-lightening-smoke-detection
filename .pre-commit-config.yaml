@@ -68,11 +68,11 @@ repos:
     hooks:
       - id: codespell
         exclude: >
-                    (?x)^(
-                        .*\.ipynb|
-                        .*\.pyc|
-                        \.tox
-                    )$
+            (?x)^(
+                .*\.ipynb|
+                .*\.pyc|
+                \.tox
+            )$
         args:
           - --ignore-words-list=crate,nd,strack,dota,lightening
 
