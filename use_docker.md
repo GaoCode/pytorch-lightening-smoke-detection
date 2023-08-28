@@ -7,7 +7,7 @@ docker build --build-arg SAGE_STORE_URL=${SAGE_STORE_URL} --build-arg SAGE_USER_
 # Run docker image:
 
 ```bash
-docker run --gpus all -it -p 8888:8888 gao/lightening:1.0 bash
+docker run -v ${PWD}:/src --gpus all -it -p 8888:8888 gao/lightening:1.0 bash
 ```
 
 docker run --gpus all gao/lightening:1.0 nvidia-smi
