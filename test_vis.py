@@ -6,13 +6,14 @@ import numpy as np
 # import cv2
 
 # import os
+
 # from pathlib import Path
 # import xml.etree.ElementTree as ET
 # import sklearn.metrics
 # import torchvision
 # import torch
 
-from vis import display_image
+from vis import display_image, display_bounding_box
 
 metadata = pickle.load(open("./data/metadata.pkl", "rb"))
 # print("metadata", metadata)
@@ -21,7 +22,7 @@ raw_data_path = "./data/"
 raw_labels_path = "/userdata/kerasData/data/new_data/drive_clone/"
 labels_path = "/root/pytorch_lightning_data/drive_clone_numpy/"
 
-image = "data/mini_seq/1465065908_+00240.jpg"
+image = "data/20160604_FIRE_smer-tcs3-mobo-c/1465065908_+00240.jpg"
 
 image_preds_path = (
     "./saved_logs/versions_246-258/version_246_hem-test/image_preds.csv"
@@ -52,3 +53,8 @@ image_pred = np.load(image_preds_path)
 display_image(
     image, int(image_pred), "100", tile_probs=probs, idx=0, save_path=save_path
 )
+
+save_path = "data/img_smokey_net_gt_box.jpg"
+image_name = image[5:-4]
+gt_bboxes = metadata["bbox_labels"][image_name]
+display_bounding_box(image, gt_bboxes, save_path=save_path)

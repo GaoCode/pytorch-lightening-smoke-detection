@@ -9,8 +9,8 @@ from pathlib import Path
 
 # import xml.etree.ElementTree as ET
 # import sklearn.metrics
-# import torchvision
-# import torch
+import torchvision
+import torch
 
 
 def calculate_overlap_ticks(max_dim, tile_size=224, tile_overlap=20):
@@ -188,6 +188,58 @@ def display_image(
                         weight="heavy",
                         color="white" if tile_probs[j, i] < 0.5 else "red",
                     )
+
+    if save_path is not None:
+        plt.savefig(save_path, bbox_inches="tight")
+        plt.close()
+
+
+def display_bounding_box(
+    image,
+    gt_bboxes,
+    resize_dimensions=(1392, 1856),
+    crop_height=1040,
+    save_path=None,
+):
+    label_image_path = image
+    img = cv2.imread(label_image_path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    resize_factor = np.array(resize_dimensions) / np.array(img.shape[:2])
+
+    img = cv2.resize(img, (resize_dimensions[1], resize_dimensions[0]))[
+        -crop_height:
+    ]
+    img = img.transpose(2, 0, 1)
+
+    bboxes = []
+    # gt_bboxes = metadata["bbox_labels"][image_name]
+    for i in range(len(gt_bboxes)):
+        bboxes.append([0, 0, 0, 0])
+        bboxes[i][0] = gt_bboxes[i][0] * resize_factor[1]
+        bboxes[i][1] = gt_bboxes[i][1] * resize_factor[0] - (
+            resize_dimensions[0] - crop_height
+        )
+        bboxes[i][2] = gt_bboxes[i][2] * resize_factor[1]
+        bboxes[i][3] = gt_bboxes[i][3] * resize_factor[0] - (
+            resize_dimensions[0] - crop_height
+        )
+
+        bboxes[i][1] = np.maximum(bboxes[i][1], 0)
+        bboxes[i][3] = np.maximum(bboxes[i][3], 1)
+
+    imgs = torchvision.utils.draw_bounding_boxes(
+        torch.as_tensor(img, dtype=torch.uint8), torch.as_tensor(bboxes)
+    )
+
+    if not isinstance(imgs, list):
+        imgs = [imgs]
+    fix, axs = plt.subplots(ncols=len(imgs), squeeze=False, figsize=(16, 12))
+    for i, img in enumerate(imgs):
+        img = img.detach()
+        img = torchvision.transforms.functional.to_pil_image(img)
+        axs[0, i].imshow(np.asarray(img))
+        axs[0, i].set(xticklabels=[], yticklabels=[], xticks=[], yticks=[])
 
     if save_path is not None:
         plt.savefig(save_path, bbox_inches="tight")
